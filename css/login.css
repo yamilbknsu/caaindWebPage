@@ -1,0 +1,35 @@
+.login-wrapper{
+    text-align: center;
+    margin-top: 32px;
+    margin-bottom: 64px;
+}
+
+.login-body{    
+    width: 35%;
+    margin: auto;
+    padding-bottom: 10px;
+}
+
+.login-body h5{
+    text-align: left;
+    margin-left:24px;
+    padding-top: 24px;
+}
+.login-body p{
+    text-align: left;
+    margin-left:24px;
+}
+
+.login-form{
+    margin-left: 12px;
+    margin-right: 15px;
+}
+
+.login-body .btn{
+    background-color: #03a9f4;
+    margin-bottom: 16px;
+}
+
+.login-form a{
+    padding-bottom: 32px;
+}
