@@ -1,7 +1,6 @@
 <?php
 // Initialize the session
 session_start();
-
 // Check if the user is already logged in, if yes then redirect him to welcome page
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
     header("location: votacion_home.php");
@@ -9,16 +8,17 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
 }
 
 // Include config file
-require_once "config/config.php";
+require_once "../config/config.php";
 
 // Define variables and initialize with empty values
 $username = $password = "";
 $username_err = $password_err = "";
 
+
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Check if username is empty
-    if(empty(trim($_POST["matricula"])) || strlen(trim($_POST["matricula"])) != 10 || !ctype_digit(trim($_POST["matricula"]))){
+    if(trim($_POST["matricula"]) == false || strlen(trim($_POST["matricula"])) != 10 || !ctype_digit(trim($_POST["matricula"]))){
         $username_err = "Porfavor ingresa una matrícula válida.";
     } else{
         $username = trim($_POST["matricula"]);
@@ -33,23 +33,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     
     // Validate credentials
     if(empty($username_err) && empty($password_err)){
+        /*
+        $stmt = $pdo->prepare("use ?");
+        $stmt = $stmt->execute(array(0 => "caaind"));*/
         // Prepare a select statement
         $sql = "SELECT email, password FROM Usuario WHERE matricula = ?";
         
-        if($stmt = mysqli_prepare($link, $sql)){
-            // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "s", $param_username);
-            
-            // Set parameters
-            $param_username = $username;
-            
+        if($stmt = $pdo->prepare($sql)){
             // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
-                // Store result
-                mysqli_stmt_store_result($stmt);
+            /*
+            $stmt = $stmt->execute([$username]);
+            if($stmt){
                 
                 // Check if username exists, if yes then verify password
-                if(mysqli_stmt_num_rows($stmt) == 1){                    
+                if($stmt->rowCount() == 1){
+                    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                    echo $row;
+                      
                     // Bind result variables
                     mysqli_stmt_bind_result($stmt, $email, $hashed_password);
                     if(mysqli_stmt_fetch($stmt)){
@@ -86,18 +86,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     // Display an error message if username doesn't exist
                     $username_err = "No existe una cuenta asociada a esa matricula.";
                 }
+                
             } else{
                 echo "Oops! Algo salió mal.";
             }
+            */
         }
-        
-        // Close statement
-        mysqli_stmt_close($stmt);
     }
-    
-    // Close connection
-    mysqli_close($link);
 }
+
 ?>
 
 <html lang="es">
@@ -159,7 +156,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     <div class="login-form">
                         <div class="row">
                             <div class="input-field col s10">
-                                <input class="<?php echo (!empty($username_err)) ? 'invalid' : ''; ?>" id="matricula_input" type="text" name="matricula">
+                                <input class="<?php echo (!empty($username_err)) ? 'invalid' : ''; ?>" id="matricula_input" type="text" name="matricula" value = <? echo $username;?>>
                                 <label for="matricula_input">Matricula</label>
                                 <span class="helper-text" data-error="<?php echo (!empty($username_err)) ? $username_err : ''; ?>" data-success="right"></span>
                             </div>
